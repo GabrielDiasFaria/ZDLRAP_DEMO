@@ -5,9 +5,9 @@ define root view entity ZC_DLRAP_CERTIFPRODUCT
 {
   key CertUuid,
       Matnr,
-      Description,
+      Description, 
       Version,
-      CertStatus,
+      CertStatus, 
       CertCe,
       CertGs,
       CertFcc,

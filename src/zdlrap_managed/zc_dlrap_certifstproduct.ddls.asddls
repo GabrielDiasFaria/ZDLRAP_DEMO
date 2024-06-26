@@ -4,7 +4,7 @@ define view entity ZC_DLRAP_CERTIFSTPRODUCT
   as projection on ZI_DLRAP_CERTIFSTPRODUCT
 {
   key StateUuid,
-      CertUuid,
+      CertUuid, 
       Matnr,
       Description,
       Version,

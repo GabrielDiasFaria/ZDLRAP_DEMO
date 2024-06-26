@@ -8,7 +8,7 @@
     dataClass: #MIXED
 }
 define view entity ZI_DLRAP_CERTIFSTPRODUCT
-  as select from ZI_DLRAP_CERTIF_ST
+  as select from ZI_DLRAP_CERTIF_ST 
   association to parent ZI_DLRAP_CERTIFPRODUCT as _Certif 
                                                on $projection.CertUuid = _Certif.CertUuid
   association [1..1] to ZI_DLRAP_PRODUCT as _Prod 

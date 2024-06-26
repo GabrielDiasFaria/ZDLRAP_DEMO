@@ -8,7 +8,7 @@
     dataClass: #MIXED
 }
 define root view entity ZI_DLRAP_CERTIFPRODUCT
-  as select from ZI_DLRAP_CERTIF
+  as select from ZI_DLRAP_CERTIF 
   composition [1..*] of ZI_DLRAP_CERTIFSTPRODUCT as _Stats
   association [1..1] to ZI_DLRAP_PRODUCT as _Prod 
                                          on $projection.Matnr = _Prod.Matnr
