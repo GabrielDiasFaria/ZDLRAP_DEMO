@@ -1,5 +1,6 @@
 @EndUserText.label: 'Consumption - Certificados Status'
 @AccessControl.authorizationCheck: #NOT_REQUIRED
+@Metadata.allowExtensions: true
 define view entity ZC_DLRAP_CERTIFSTPRODUCT
   as projection on ZI_DLRAP_CERTIFSTPRODUCT
 {
