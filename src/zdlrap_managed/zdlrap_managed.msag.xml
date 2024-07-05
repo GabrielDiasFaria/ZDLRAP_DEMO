@@ -20,6 +20,12 @@
      <MSGNR>001</MSGNR>
      <TEXT>Material &amp;1 nao existe!</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZDLRAP_MANAGED</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Versão gerada com sucesso!</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

@@ -1,0 +1,30 @@
+projection;
+strict ( 1 );
+use draft;
+
+define behavior for ZC_DLRAP_CERTIFPRODUCT alias Certificate
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Stats { create; with draft; }
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+  use action Resume;
+
+  use action NewVersion;
+  use action ActiveVersion;
+  use action InactiveVersion;
+
+}
+
+define behavior for ZC_DLRAP_CERTIFSTPRODUCT alias CartificateST
+{
+  use delete;
+
+  use association _Certif;
+}

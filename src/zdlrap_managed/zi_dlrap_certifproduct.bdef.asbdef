@@ -1,0 +1,81 @@
+managed
+implementation in class zbp_i_dlrap_certifproduct unique;
+strict ( 1 );
+with draft;
+
+
+define behavior for ZI_DLRAP_CERTIFPRODUCT alias Certificate
+persistent table zdlrap_certif
+draft table zbdlrap_certif
+lock master
+total etag LocalLastChangedAt
+authorization master ( instance )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+
+  association _Stats { create; with draft; }
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  determination setInitialValues on modify { create; }
+
+  validation checkMaterial on save { field Matnr; create; update; }
+
+  action ( features: instance ) NewVersion result [1] $self;
+  action ( features: instance ) ActiveVersion result [1] $self;
+  action ( features: instance ) InactiveVersion result [1] $self;
+
+  field ( numbering : managed, readonly ) CertUUID;
+  field ( readonly ) Description, Version;
+  field ( mandatory ) Matnr;
+
+  mapping for zdlrap_certif
+  {
+    CertUUID            = cert_uuid;
+    Matnr               = matnr;
+    Version             = version;
+    CertStatus          = cert_status;
+    CertCe              = cert_ce;
+    CertGs              = cert_gs;
+    CertFcc             = cert_fcc;
+    CertIso             = cert_iso;
+    CertTuev            = cert_tuev;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_DLRAP_CERTIFSTPRODUCT alias CertificateST
+persistent table zdlrap_certif_st
+draft table zbdlrap_certifst
+lock dependent by _Certif
+authorization dependent by _Certif
+//etag master <field_name>
+{
+  delete;
+
+  field ( readonly ) CertUuid;
+  field ( numbering : managed, readonly ) StateUUID;
+
+  association _Certif;
+
+  mapping for zdlrap_certif_st
+  {
+    StateUUID           = state_uuid;
+    CertUUID            = cert_uuid;
+    Matnr               = matnr;
+    Version             = version;
+    Status              = status;
+    StatusOld           = status_old;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+
+}

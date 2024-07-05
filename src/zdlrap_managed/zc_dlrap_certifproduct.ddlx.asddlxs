@@ -47,8 +47,15 @@ annotate entity ZC_DLRAP_CERTIFPRODUCT with
   CertUuid;
 
   @UI.selectionField: [{ position: 20 }]
-  @UI.identification: [{ position: 20 }]
-  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [ { position: 20 },
+                        { type: #FOR_ACTION, dataAction: 'NewVersion', label: 'Nova Versão' },
+                        { type: #FOR_ACTION, dataAction: 'ActiveVersion', label: 'Ativar Versão' },
+                        { type: #FOR_ACTION, dataAction: 'InactiveVersion', label: 'Inativar Versão' }
+                      ]
+  @UI.lineItem: [
+                  { position: 20 },
+                  { type: #FOR_ACTION, dataAction: 'NewVersion', label: 'Nova Versão' }
+                 ]
   @EndUserText.label: 'Material'
   Matnr;
 
@@ -59,9 +66,16 @@ annotate entity ZC_DLRAP_CERTIFPRODUCT with
   Description;
 
   @UI.identification: [{ position: 30 }]
+  @UI.lineItem: [{ position: 31 }]
   @UI.fieldGroup: [{ qualifier: 'HeaderData' }]
   @EndUserText.label: 'Versao'
   Version;
+  
+  @UI.identification: [{ position: 31 }]
+  @UI.lineItem: [{ position: 31 }]
+  @UI.fieldGroup: [{ qualifier: 'HeaderData' }]
+  @EndUserText.label: 'Status'
+  CertStatus;
   
   @UI.identification: [{ position: 40 }]
   @EndUserText.label: 'Certificado CE'
