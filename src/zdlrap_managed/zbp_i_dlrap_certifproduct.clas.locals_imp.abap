@@ -65,6 +65,7 @@ CLASS lhc_Certificate IMPLEMENTATION.
         ls_state_value-Version   = 1.
         ls_state_value-StatusOld = space.
         ls_state_value-Status    = 1.
+        ls_state_value-%cid      = ls_state-CertUuid.
 
         ls_state_value-%control-Version         = if_abap_behv=>mk-on.
         ls_state_value-%control-StatusOld       = if_abap_behv=>mk-on.

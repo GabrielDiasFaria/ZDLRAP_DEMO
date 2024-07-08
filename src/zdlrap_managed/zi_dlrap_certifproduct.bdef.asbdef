@@ -1,6 +1,6 @@
 managed
 implementation in class zbp_i_dlrap_certifproduct unique;
-strict ( 1 );
+strict ( 2 );
 with draft;
 
 
