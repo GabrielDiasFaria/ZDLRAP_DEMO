@@ -26,11 +26,49 @@ CLASS lhc_Certificate DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS newversion FOR MODIFY
       IMPORTING keys FOR ACTION certificate~newversion RESULT result.
 
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+      IMPORTING REQUEST requested_authorizations FOR certificate RESULT result.
+
 ENDCLASS.
 
 CLASS lhc_Certificate IMPLEMENTATION.
 
   METHOD get_instance_authorizations.
+
+    READ ENTITIES OF zi_dlrap_certifproduct IN LOCAL MODE
+        ENTITY Certificate
+        FIELDS ( Version )
+        WITH CORRESPONDING #( keys )
+        RESULT DATA(lt_certificates).
+
+    CHECK lt_certificates IS NOT INITIAL.
+
+    LOOP AT lt_certificates INTO DATA(ls_certificates).
+
+        APPEND VALUE #( LET upd_auth = COND #( WHEN ls_certificates-Version = 2
+                                                then if_abap_behv=>auth-unauthorized
+                                               ELSE if_abap_behv=>auth-allowed )
+                            del_auth = if_abap_behv=>auth-unauthorized
+                        IN
+                         %tky                   = ls_certificates-%tky
+                         %update                = upd_auth
+                         %action-Edit           = upd_auth
+                         %action-NewVersion     = upd_auth
+                         %delete                = del_auth
+                      ) TO result.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD get_global_authorizations.
+
+    " Se o usuário estiver tentando criar...
+*    IF requested_authorizations-%action-NewVersion = if_abap_behv=>mk-on.
+*        " Authority Check
+*        result-%action-NewVersion = if_abap_behv=>auth-unauthorized.
+*    ENDIF.
+
   ENDMETHOD.
 
   METHOD setInitialValues.
@@ -59,30 +97,30 @@ CLASS lhc_Certificate IMPLEMENTATION.
 
     LOOP AT lt_certificates INTO DATA(ls_certificates).
 
-        ls_state-%key = ls_certificates-%key.
-        ls_state-CertUuid = ls_state_value-CertUuid = ls_certificates-CertUuid.
+      ls_state-%key = ls_certificates-%key.
+      ls_state-CertUuid = ls_state_value-CertUuid = ls_certificates-CertUuid.
 
-        ls_state_value-Version   = 1.
-        ls_state_value-StatusOld = space.
-        ls_state_value-Status    = 1.
-        ls_state_value-%cid      = ls_state-CertUuid.
+      ls_state_value-Version   = 1.
+      ls_state_value-StatusOld = space.
+      ls_state_value-Status    = 1.
+      ls_state_value-%cid      = ls_state-CertUuid.
 
-        ls_state_value-%control-Version         = if_abap_behv=>mk-on.
-        ls_state_value-%control-StatusOld       = if_abap_behv=>mk-on.
-        ls_state_value-%control-Status          = if_abap_behv=>mk-on.
-        ls_state_value-%control-LastChangedAt   = if_abap_behv=>mk-on.
-        ls_state_value-%control-LastChangedBy   = if_abap_behv=>mk-on.
-        APPEND ls_state_value TO ls_state-%target.
+      ls_state_value-%control-Version         = if_abap_behv=>mk-on.
+      ls_state_value-%control-StatusOld       = if_abap_behv=>mk-on.
+      ls_state_value-%control-Status          = if_abap_behv=>mk-on.
+      ls_state_value-%control-LastChangedAt   = if_abap_behv=>mk-on.
+      ls_state_value-%control-LastChangedBy   = if_abap_behv=>mk-on.
+      APPEND ls_state_value TO ls_state-%target.
 
-        APPEND ls_state TO lt_state.
+      APPEND ls_state TO lt_state.
 
-        MODIFY ENTITIES OF zi_dlrap_certifproduct IN LOCAL MODE
-          ENTITY Certificate
-          CREATE BY \_Stats
-          FROM lt_state
-            REPORTED DATA(ls_return_ass)
-            MAPPED DATA(ls_mapped_ass)
-            FAILED DATA(ls_failed_ass).
+      MODIFY ENTITIES OF zi_dlrap_certifproduct IN LOCAL MODE
+        ENTITY Certificate
+        CREATE BY \_Stats
+        FROM lt_state
+          REPORTED DATA(ls_return_ass)
+          MAPPED DATA(ls_mapped_ass)
+          FAILED DATA(ls_failed_ass).
 
     ENDLOOP.
 
@@ -103,20 +141,20 @@ CLASS lhc_Certificate IMPLEMENTATION.
         INTO TABLE @DATA(lt_material).
 
     LOOP AT lt_certificates INTO DATA(ls_certificates).
-        IF ls_certificates-Matnr is initial OR
-           NOT LINE_EXISTS( lt_material[ matnr = ls_certificates-Matnr ] ).
+      IF ls_certificates-Matnr IS INITIAL OR
+         NOT line_exists( lt_material[ matnr = ls_certificates-Matnr ] ).
 
 *           APPEND VALUE #( %tky = ls_certificates-%tky ) TO failed-certificate.
-           APPEND VALUE #(  %tky        = ls_certificates-%tky
-                            %state_area = 'MATERIAL_UNKNOWN'
-                            %msg        = NEW zcx_dlrap_certificate(
-                                            severity = if_abap_behv_message=>severity-error
-                                            textid = zcx_dlrap_certificate=>material_unknown
-                                            attr1 = CONV string( ls_certificates-Matnr ) )
-                            )
-                            TO reported-certificate.
+        APPEND VALUE #(  %tky        = ls_certificates-%tky
+                         %state_area = 'MATERIAL_UNKNOWN'
+                         %msg        = NEW zcx_dlrap_certificate(
+                                         severity = if_abap_behv_message=>severity-error
+                                         textid = zcx_dlrap_certificate=>material_unknown
+                                         attr1 = CONV string( ls_certificates-Matnr ) )
+                         )
+                         TO reported-certificate.
 
-        ENDIF.
+      ENDIF.
     ENDLOOP.
 
   ENDMETHOD.
@@ -131,7 +169,7 @@ CLASS lhc_Certificate IMPLEMENTATION.
         ALL FIELDS WITH CORRESPONDING #( keys )
         RESULT DATA(lt_certificates).
 
-     " Filhos
+    " Filhos
     DATA: lt_state       TYPE TABLE FOR CREATE zi_dlrap_certifproduct\_Stats,
           ls_state       LIKE LINE OF lt_state,
           ls_state_value LIKE LINE OF ls_state-%target.
@@ -196,7 +234,7 @@ CLASS lhc_Certificate IMPLEMENTATION.
         ALL FIELDS WITH CORRESPONDING #( keys )
         RESULT DATA(lt_certificates).
 
-     " Filhos
+    " Filhos
     DATA: lt_state       TYPE TABLE FOR CREATE zi_dlrap_certifproduct\_Stats,
           ls_state       LIKE LINE OF lt_state,
           ls_state_value LIKE LINE OF ls_state-%target.

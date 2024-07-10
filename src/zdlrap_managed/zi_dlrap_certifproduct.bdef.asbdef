@@ -9,7 +9,7 @@ persistent table zdlrap_certif
 draft table zbdlrap_certif
 lock master
 total etag LocalLastChangedAt
-authorization master ( instance )
+authorization master ( global, instance )
 //etag master <field_name>
 {
   create;
