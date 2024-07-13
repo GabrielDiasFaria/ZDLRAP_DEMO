@@ -1,0 +1,4 @@
+@EndUserText.label: 'Vendas'
+define service ZUIDLRAP_SALES {
+  expose ZC_SALES_COMPLETE;
+}

@@ -1,0 +1,9 @@
+projection;
+strict ( 1 );
+
+define behavior for ZC_SALES_COMPLETE //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+}
