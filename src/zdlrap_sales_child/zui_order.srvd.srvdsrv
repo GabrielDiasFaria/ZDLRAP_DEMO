@@ -1,0 +1,5 @@
+@EndUserText.label: 'UI - Order'
+define service ZUI_ORDER {
+  expose ZC_ORDER_APP;
+  expose ZC_ORDER_ITEMS_APP;
+}
